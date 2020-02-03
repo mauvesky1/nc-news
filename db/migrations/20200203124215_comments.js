@@ -10,8 +10,8 @@ exports.up = function(knex) {
       .references("article_id")
       .inTable("articles");
     commentsTable.increments("votes");
-    commentsTable.timestamp("created_at");
     commentsTable.string("body");
+    commentsTable.timestamp("created_at");
   });
 };
 
