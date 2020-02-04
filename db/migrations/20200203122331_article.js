@@ -3,7 +3,7 @@ exports.up = function(knex) {
     articlesTable.increments("article_id").primary();
     articlesTable.string("title");
     articlesTable.string("body");
-    articlesTable.increments("votes");
+    articlesTable.integer("votes").defaultTo(0);
     articlesTable
       .string("field")
       .references("slug")
@@ -13,7 +13,6 @@ exports.up = function(knex) {
       .references("username")
       .inTable("users");
     articlesTable.timestamp("created_at");
-    //.references('id').inTable('
   });
 };
 

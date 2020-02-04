@@ -42,4 +42,27 @@ exports.formatComments = (comments, articleRef) => {
   //     - The value of the new `article_id` key must be the id corresponding to the original title value provided
   //       - Its`created_at` value converted into a javascript date object
   //         - The rest of the comment's properties must be maintained
+  let copy = [];
+  const copyarticleRef = { ...articleRef };
+
+  if (comments.length === 0) {
+    return copy;
+  }
+
+  comments.map(function(item) {
+    copy.push({ ...item });
+  });
+
+  copy.map(function(copiedItem) {
+    const newDate = new Date(copiedItem.created_at);
+
+    copiedItem.created_at = newDate;
+
+    copiedItem.author = copiedItem.created_by;
+    copiedItem.article_id = copyarticleRef[copiedItem.belongs_to];
+
+    delete copiedItem.belongs_to;
+    delete copiedItem.created_by;
+  });
+  return copy;
 };

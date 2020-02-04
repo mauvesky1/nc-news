@@ -9,7 +9,7 @@ exports.up = function(knex) {
       .integer("article_id")
       .references("article_id")
       .inTable("articles");
-    commentsTable.increments("votes");
+    commentsTable.integer("votes").defaultTo(0);
     commentsTable.string("body");
     commentsTable.timestamp("created_at");
   });
