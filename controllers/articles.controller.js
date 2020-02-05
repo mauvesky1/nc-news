@@ -16,5 +16,7 @@ exports.getArticle = (req, res, next) => {
 exports.patchArticle = (req, res, next) => {
   const { article_id } = req.params;
   const votes = req.body;
-  adjustVote(req.params, votes).then(result => {});
+  adjustVote(req.params, votes).then(result => {
+    console.log(result);
+  });
 };

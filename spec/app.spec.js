@@ -63,7 +63,8 @@ describe("/api", () => {
               "created_at",
               "title",
               "topic",
-              "votes"
+              "votes",
+              "comment_count"
             );
           });
       });
@@ -85,16 +86,16 @@ describe("/api", () => {
           });
       });
     });
-    xdescribe("PATCH", () => {
-      it("Adds to the articles' vote total", () => {
-        return request(app)
-          .patch("/api/articles/1")
-          .send({ inc_votes: 22 })
-          .expect(200)
-          .then(({ body }) => {
-            console.log(body);
-          });
-      });
+  });
+  describe("PATCH", () => {
+    it("Adds to the articles' vote total", () => {
+      return request(app)
+        .patch("/api/articles/1")
+        .send({ inc_votes: 22 })
+        .expect(200)
+        .then(({ body }) => {
+          console.log(body);
+        });
     });
   });
 });
