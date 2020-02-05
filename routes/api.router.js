@@ -5,6 +5,6 @@ const article_router = require("./article.router");
 
 api_router.use("/topics", topics_router);
 api_router.use("/users", users_router);
-api_router.use("/articles", article_router);
+api_router.use("/articles/", article_router);
 
 module.exports = api_router;

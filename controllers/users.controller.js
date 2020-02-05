@@ -9,7 +9,6 @@ exports.getUser = (req, res, next) => {
       res.status(200).send({ user: result });
     })
     .catch(err => {
-      console.log("loading error");
       next(err);
     });
 };
