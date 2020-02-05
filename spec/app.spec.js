@@ -44,8 +44,6 @@ describe("/api", () => {
           .get("/api/users/0")
           .expect(404)
           .then(({ body }) => {
-            console.log(body.msg, "this is the body");
-            // expect(body.statusCode).to.equal(404);
             expect(body.msg).to.equal("User not found, check input");
           });
       });
@@ -58,7 +56,6 @@ describe("/api", () => {
           .get("/api/articles/1")
           .expect(200)
           .then(({ body }) => {
-            //expect(body.user).to.equal(1);
             expect(body.user).to.have.keys(
               "author",
               "article_id",
@@ -77,6 +74,25 @@ describe("/api", () => {
           .then(({ body }) => {
             // console.log(body);
             expect(body.msg).to.equal("Not found");
+          });
+      });
+      it("Throws a bad request when the user inputs anything other than a number", () => {
+        return request(app)
+          .get("/api/articles/naughtydog")
+          .expect(400)
+          .then(({ body }) => {
+            console.log(body);
+          });
+      });
+    });
+    xdescribe("PATCH", () => {
+      it("Adds to the articles' vote total", () => {
+        return request(app)
+          .patch("/api/articles/1")
+          .send({ inc_votes: 22 })
+          .expect(200)
+          .then(({ body }) => {
+            console.log(body);
           });
       });
     });
