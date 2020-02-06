@@ -147,13 +147,20 @@ describe("/api", () => {
             expect(body.comments.length).to.equal(13);
           });
       });
-      it("Responds with an array of comments for the given article Id", () => {
+      it("Responds with a 404", () => {
         return request(app)
           .get("/api/articles/99/comments")
           .expect(404)
-          .then(body => {
-            console.log(body);
-            // expect(body.comments.length).to.equal(13);
+          .then(({ body }) => {
+            expect(body.msg).to.equal("404 not found here!");
+          });
+      });
+      it("Responds with an 400", () => {
+        return request(app)
+          .get("/api/articles/thisisnotanumber/comments")
+          .expect(400)
+          .then(({ body }) => {
+            expect(body.msg).to.equal("URL string incorrect");
           });
       });
     });

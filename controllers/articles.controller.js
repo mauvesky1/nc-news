@@ -5,7 +5,6 @@ exports.getArticle = (req, res, next) => {
   const article_id = req.params;
   fetchArticle(article_id)
     .then(article => {
-      // console.log(article);
       return Promise.all([comment_count(article[0].article_id), article]);
     })
     .then(([noOfComments, article]) => {

@@ -1,7 +1,6 @@
 const knex = require("../db/connection");
 
 exports.fetchArticle = article_id => {
-  //console.log(article_id, "input");
   //   return knex
   //     .select("articles.*")
   //     .from("articles")
@@ -13,7 +12,7 @@ exports.fetchArticle = article_id => {
   //       if (article.length === 0) {
   //         return Promise.reject({ status: 404, msg: "Not found" });
   //       }
-  //       console.log(article);
+
   //     });
   // };
   return knex
@@ -21,7 +20,6 @@ exports.fetchArticle = article_id => {
     .from("articles")
     .where(article_id)
     .then(article => {
-      // console.log(article);
       if (article.length === 0) {
         return Promise.reject({ status: 404, msg: "Not found" });
       }

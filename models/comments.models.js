@@ -37,8 +37,5 @@ exports.fetchComments = article_id => {
     .then(comments => {
       // console.log(comments, "in the comments"); "article_id", "=", 1
       return comments;
-    })
-    .catch(err => {
-      next(err);
     });
 };
