@@ -29,13 +29,16 @@ exports.insertComment = comment => {
   );
 };
 
-//   return knex("treasures")
-//     .insert(treasure)
-//     .returning("*")
-//     .then(item => {
-//       return item;
-//     })
-//     .catch(() => {
-//       return Promise.reject({ status: 400, msg: "Bad request, check input" });
-//     });
-// };
+exports.fetchComments = article_id => {
+  return knex
+    .select("*")
+    .from("comments")
+    .where(article_id)
+    .then(comments => {
+      // console.log(comments, "in the comments"); "article_id", "=", 1
+      return comments;
+    })
+    .catch(err => {
+      next(err);
+    });
+};

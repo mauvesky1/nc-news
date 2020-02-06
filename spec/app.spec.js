@@ -118,19 +118,42 @@ describe("/api", () => {
   });
 
   describe("/api/articles/:article_id/comments", () => {
-    xdescribe("POST", () => {
+    describe("POST", () => {
       it("Posts a comment to the database and also returns that comment", () => {
         return request(app)
           .post("/api/articles/1/comments")
           .send({ username: "username33", body: "MITCHTHEMAN" })
           .expect(201)
           .then(({ body }) => {
-            console.log(body);
+            //console.log(body);
             expect(body.comment[0]).to.have.keys(
               "comment_id",
               "author",
-              "votes"
+              "votes",
+              "article_id",
+              "body",
+              "created_at"
             );
+          });
+      });
+    });
+    describe("GET", () => {
+      it("Responds with an array of comments for the given article Id", () => {
+        return request(app)
+          .get("/api/articles/1/comments")
+          .expect(200)
+          .then(({ body }) => {
+            //console.log(body);
+            expect(body.comments.length).to.equal(13);
+          });
+      });
+      it("Responds with an array of comments for the given article Id", () => {
+        return request(app)
+          .get("/api/articles/99/comments")
+          .expect(404)
+          .then(body => {
+            console.log(body);
+            // expect(body.comments.length).to.equal(13);
           });
       });
     });

@@ -2,10 +2,10 @@ const { fetchArticle, incrementVote } = require("../models/articles.models");
 const { comment_count } = require("../models/comments.models");
 
 exports.getArticle = (req, res, next) => {
-  const { article_id } = req.params;
-
-  fetchArticle(req.params)
+  const article_id = req.params;
+  fetchArticle(article_id)
     .then(article => {
+      // console.log(article);
       return Promise.all([comment_count(article[0].article_id), article]);
     })
     .then(([noOfComments, article]) => {
