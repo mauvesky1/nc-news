@@ -118,11 +118,20 @@ describe("/api", () => {
   });
 
   describe("/api/articles/:article_id/comments", () => {
-    describe("POST", () => {
+    xdescribe("POST", () => {
       it("Posts a comment to the database and also returns that comment", () => {
         return request(app)
           .post("/api/articles/1/comments")
-          .expect(201);
+          .send({ username: "username33", body: "MITCHTHEMAN" })
+          .expect(201)
+          .then(({ body }) => {
+            console.log(body);
+            expect(body.comment[0]).to.have.keys(
+              "comment_id",
+              "author",
+              "votes"
+            );
+          });
       });
     });
   });

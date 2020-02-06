@@ -66,3 +66,12 @@ exports.formatComments = (comments, articleRef) => {
   });
   return copy;
 };
+
+exports.renameKey = comment => {
+  let copy = { ...comment };
+
+  copy[created_by] = copy[username];
+  delete copy[username];
+
+  return copy;
+};

@@ -9,5 +9,5 @@ const {
 app.use(express.json());
 app.use("/api", api_router);
 app.use(customErrorHandler);
-//app.use("/*", send404);
+app.use("/*", send404);
 module.exports = app;
