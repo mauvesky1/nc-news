@@ -1,5 +1,5 @@
 exports.customErrorHandler = (err, req, res, next) => {
-  console.log(err);
+  //console.log(err, "in error handler");
   if (err.status) {
     res.status(err.status).send({ msg: err.msg });
   } else if (err.code === "22P02") {
@@ -9,6 +9,6 @@ exports.customErrorHandler = (err, req, res, next) => {
   }
 };
 
-exports.send404 = (req, res, next) => {
+exports.send404 = (err, req, res, next) => {
   res.status(404).send({ msg: "404 not found here!" });
 };

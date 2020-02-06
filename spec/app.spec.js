@@ -82,20 +82,48 @@ describe("/api", () => {
           .get("/api/articles/naughtydog")
           .expect(400)
           .then(({ body }) => {
-            console.log(body);
+            expect(body.msg).to.equal("URL string incorrect");
+          });
+      });
+    });
+    describe("PATCH", () => {
+      it("Adds to the articles' vote total", () => {
+        return request(app)
+          .patch("/api/articles/1")
+          .send({ votes: 22 })
+          .expect(200)
+          .then(({ body }) => {
+            //console.log(body);
+            expect(body.article.votes).to.equal(122);
+          });
+      });
+      it("Respond with a 404 not found when requesting a non-existent article", () => {
+        return request(app)
+          .patch("/api/articles/99")
+          .expect(404)
+          .then(({ body }) => {
+            // console.log(body);
+            expect(body.msg).to.equal("Not found");
+          });
+      });
+      it("Respond with a 400 bad request when the request is not a number", () => {
+        return request(app)
+          .patch("/api/articles/prism")
+          .expect(400)
+          .then(({ body }) => {
+            expect(body.msg).to.equal("URL string incorrect");
           });
       });
     });
   });
-  describe("PATCH", () => {
-    it("Adds to the articles' vote total", () => {
-      return request(app)
-        .patch("/api/articles/1")
-        .send({ inc_votes: 22 })
-        .expect(200)
-        .then(({ body }) => {
-          console.log(body);
-        });
+
+  describe("/api/articles/:article_id/comments", () => {
+    describe("POST", () => {
+      it("Posts a comment to the database and also returns that comment", () => {
+        return request(app)
+          .post("/api/articles/1/comments")
+          .expect(201);
+      });
     });
   });
 });
