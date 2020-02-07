@@ -11,7 +11,6 @@ exports.comment_count = article_id => {
 };
 
 exports.insertComment = comment => {
-  console.log(comment, "this is the comment");
   return (
     knex("comments")
       .select("*")
@@ -32,5 +31,17 @@ exports.fetchComments = article_id => {
     .where(article_id)
     .then(comments => {
       return comments;
+    });
+};
+
+exports.patchComment = (votes, comment_id) => {
+  return knex
+    .select("votes")
+    .from("comments")
+    .where({ comment_id: "1" })
+    .increment({ votes: votes })
+    .returning("*")
+    .then(updatedComment => {
+      return updatedComment;
     });
 };

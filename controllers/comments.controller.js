@@ -34,8 +34,10 @@ exports.getComments = (req, res, next) => {
 };
 
 exports.patchComments = (req, res, next) => {
-  console.log(req);
+  const { inc_votes } = req.body;
   console.log("controller");
-  patchComment();
+  patchComment(inc_votes).then(result => {
+    res.send({ comment: result });
+  });
   //  patchComment(comment_id)
 };

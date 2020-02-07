@@ -277,16 +277,24 @@ describe("/api", () => {
       });
     });
   });
-  describe("/api/comments/:comment_id", () => {
+  describe.only("/api/comments/:comment_id", () => {
     describe("PATCH", () => {
       it("updates the vote property of a comment", () => {
         return request(app)
           .patch("/api/comments/1")
           .send({ inc_votes: 111 })
-          .expect(202)
+          .expect(200)
           .then(({ body }) => {
             console.log(body);
-            expect(body).to.equal(111);
+            expect(body.comment[0].votes).to.equal(127);
+            expect(body.comment[0]).to.have.keys(
+              "comment_id",
+              "votes",
+              "article_id",
+              "author",
+              "body",
+              "created_at"
+            );
           });
       });
     });
