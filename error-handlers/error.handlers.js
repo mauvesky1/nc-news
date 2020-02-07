@@ -13,3 +13,7 @@ exports.customErrorHandler = (err, req, res, next) => {
 exports.send404 = (err, req, res, next) => {
   res.status(404).send({ msg: "404 not found here!" });
 };
+
+exports.send405 = (err, req, res, next) => {
+  res.status(405).send({ msg: "Not Allowed" });
+};

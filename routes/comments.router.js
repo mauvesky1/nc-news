@@ -7,7 +7,6 @@ const {
 comments_router
   .route("/:comment_id")
   .patch(patchComments)
-  .delete(deleteComment)
-  .all();
+  .delete(deleteComment);
 
 module.exports = comments_router;

@@ -38,10 +38,9 @@ exports.patchArticle = (req, res, next) => {
 
 exports.getArticles = (req, res, next) => {
   const { sort_by, order, author, topic } = req.query;
-  //console.log(author);topi
+
   fetchArticles(sort_by, order, author, topic)
     .then(result => {
-      //console.log(result, boo, "hmm");
       // if (boo === false) {
       //   return Promise.reject({
       //     status: 400,
@@ -54,7 +53,6 @@ exports.getArticles = (req, res, next) => {
       res.status(200).send({ articles: result });
     })
     .catch(err => {
-      // console.log("in the catch", err);
       next(err);
     });
 };

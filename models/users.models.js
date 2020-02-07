@@ -1,7 +1,6 @@
 const knex = require("../db/connection");
 
 exports.fetchUser = username => {
-  //console.log(username);
   return knex
     .select("*")
     .from("users")

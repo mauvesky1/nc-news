@@ -78,7 +78,6 @@ describe("/api", () => {
           .get("/api/articles/99")
           .expect(404)
           .then(({ body }) => {
-            // console.log(body);
             expect(body.msg).to.equal("Not found");
           });
       });
@@ -167,6 +166,13 @@ describe("/api", () => {
     });
   });
   describe("/api/articles/", () => {
+    describe("Delete", () => {
+      it("Responds with a 405 error code", () => {
+        return request(app)
+          .delete("/api/articles")
+          .expect(405);
+      });
+    });
     describe("GET", () => {
       it("Responds with an array of article objects", () => {
         return request(app)
@@ -264,15 +270,13 @@ describe("/api", () => {
             expect(body.msg).to.equal("Bad query");
           });
       });
-      xit("Sends a different 400 bad request if an attempt is made to filter by a topic or author that does not have any articles", () => {
+      xit("Sends an empty response if an attempt is made to filter by an existing topic or author that does not have any articles", () => {
         return request(app)
           .get("/api/articles?topic=paper")
-          .expect(400)
+          .expect(200)
           .then(({ body }) => {
-            console.log(body);
-            expect(body.msg).to.equal(
-              "There is no data associated with this input"
-            );
+            body;
+            // expect(body.msg).to.equal()
           });
       });
     });
@@ -304,15 +308,3 @@ describe("/api", () => {
     });
   });
 });
-// describe.only("checkExists", () => {
-//   beforeEach(() => {
-//     return connection.seed.run();
-//   });
-//   describe.only("CheckExists", () => {
-//     it("Returns true if a given author or topic exists, regardless of whether any articles are assoicated with them", () => {
-//       return request(checkExists("paper", "topic")).then(body => {
-//         console.log(body, "inside the then block");
-//       });
-//     });
-//   });
-// });
