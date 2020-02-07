@@ -1,7 +1,8 @@
 const {
   insertComment,
   fetchComments,
-  patchComment
+  patchComment,
+  deleteComment
 } = require("../models/comments.models");
 const { renameKey } = require("../db/utils/utils");
 
@@ -13,7 +14,6 @@ exports.postComment = (req, res, next) => {
 
   body.article_id = article_id;
   insertComment(body).then(commentData => {
-    console.log("in the controller");
     res.status(201).send({ comment: commentData });
   });
 };
@@ -35,9 +35,22 @@ exports.getComments = (req, res, next) => {
 
 exports.patchComments = (req, res, next) => {
   const { inc_votes } = req.body;
-  console.log("controller");
-  patchComment(inc_votes).then(result => {
+  const { comment_id } = req.params;
+
+  patchComment(inc_votes, comment_id).then(result => {
     res.send({ comment: result });
   });
   //  patchComment(comment_id)
+};
+
+exports.deleteComment = (req, res, next) => {
+  const { comment_id } = req.params;
+  console.log(comment_id);
+  deleteComment(comment_id).then(result => {
+    if (result === 1) {
+      res.status(204).send();
+    } else {
+      Promise.reject({ status: 404, msg: "Not found" });
+    }
+  });
 };

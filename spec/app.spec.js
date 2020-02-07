@@ -277,7 +277,7 @@ describe("/api", () => {
       });
     });
   });
-  describe.only("/api/comments/:comment_id", () => {
+  describe("/api/comments/:comment_id", () => {
     describe("PATCH", () => {
       it("updates the vote property of a comment", () => {
         return request(app)
@@ -285,7 +285,6 @@ describe("/api", () => {
           .send({ inc_votes: 111 })
           .expect(200)
           .then(({ body }) => {
-            console.log(body);
             expect(body.comment[0].votes).to.equal(127);
             expect(body.comment[0]).to.have.keys(
               "comment_id",
@@ -296,6 +295,11 @@ describe("/api", () => {
               "created_at"
             );
           });
+      });
+      it("Deletes the comment", () => {
+        return request(app)
+          .delete("/api/comments/1")
+          .expect(204);
       });
     });
   });

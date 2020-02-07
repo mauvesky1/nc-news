@@ -16,7 +16,6 @@ exports.formatDates = list => {
 
   copy.map(function(item) {
     const newDate = new Date(item.created_at);
-    //console.log(newDate);
     item.created_at = newDate;
   });
 

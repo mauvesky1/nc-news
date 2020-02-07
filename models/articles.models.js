@@ -28,7 +28,6 @@ exports.fetchArticle = article_id => {
 };
 
 exports.incrementVote = (article_id, votes) => {
-  console.log(votes);
   return knex
     .select("votes")
     .from("articles")
