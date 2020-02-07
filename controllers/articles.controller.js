@@ -1,4 +1,8 @@
-const { fetchArticle, incrementVote } = require("../models/articles.models");
+const {
+  fetchArticles,
+  fetchArticle,
+  incrementVote
+} = require("../models/articles.models");
 const { comment_count } = require("../models/comments.models");
 
 exports.getArticle = (req, res, next) => {
@@ -9,7 +13,6 @@ exports.getArticle = (req, res, next) => {
     })
     .then(([noOfComments, article]) => {
       article[0].comment_count = noOfComments;
-
       const result = article[0];
       res.status(200).send({ user: result });
     })
@@ -29,4 +32,14 @@ exports.patchArticle = (req, res, next) => {
     .catch(err => {
       next(err);
     });
+};
+
+exports.getArticles = (req, res, next) => {
+  const { sort_by, order } = req.query;
+
+  fetchArticles(sort_by, order)
+    .then(result => {
+      res.status(200).send({ articles: result });
+    })
+    .catch(next);
 };

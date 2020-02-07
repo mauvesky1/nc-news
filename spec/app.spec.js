@@ -2,9 +2,12 @@ process.env.NODE_ENV = "test";
 
 const chai = require("chai");
 const { expect } = chai;
+const chaiSorted = require("sams-chai-sorted");
 const request = require("supertest");
 const app = require("../app");
 const connection = require("../db/connection");
+
+chai.use(chaiSorted);
 
 after(() => {
   connection.destroy();
@@ -22,7 +25,7 @@ describe("/api", () => {
           .expect(200)
           .then(({ body }) => {
             const topics = body.topics;
-            //console.log(body, "this is the body");
+
             expect(topics[0]).to.have.keys("slug", "description");
           });
       });
@@ -93,7 +96,6 @@ describe("/api", () => {
           .send({ votes: 22 })
           .expect(200)
           .then(({ body }) => {
-            //console.log(body);
             expect(body.article.votes).to.equal(122);
           });
       });
@@ -102,7 +104,6 @@ describe("/api", () => {
           .patch("/api/articles/99")
           .expect(404)
           .then(({ body }) => {
-            // console.log(body);
             expect(body.msg).to.equal("Not found");
           });
       });
@@ -125,7 +126,6 @@ describe("/api", () => {
           .send({ username: "username33", body: "MITCHTHEMAN" })
           .expect(201)
           .then(({ body }) => {
-            //console.log(body);
             expect(body.comment[0]).to.have.keys(
               "comment_id",
               "author",
@@ -140,11 +140,10 @@ describe("/api", () => {
     describe("GET", () => {
       it("Responds with an array of comments for the given article Id", () => {
         return request(app)
-          .get("/api/articles/1/comments")
+          .get("/api/articles/5/comments")
           .expect(200)
           .then(({ body }) => {
-            //console.log(body);
-            expect(body.comments.length).to.equal(13);
+            expect(body.comments.length).to.equal(2);
           });
       });
       it("Responds with a 404", () => {
@@ -161,6 +160,46 @@ describe("/api", () => {
           .expect(400)
           .then(({ body }) => {
             expect(body.msg).to.equal("URL string incorrect");
+          });
+      });
+    });
+  });
+  describe("/api/articles/", () => {
+    describe("GET", () => {
+      it("Responds with an array of article objects", () => {
+        return request(app)
+          .get("/api/articles")
+          .expect(200)
+          .then(({ body }) => {
+            expect(body.articles[0]).to.have.keys(
+              "title",
+              "article_id",
+              "author",
+              "body",
+              "created_at",
+              "topic",
+              "votes",
+              "comment_count"
+            );
+          });
+      });
+      it("The default response is a list sorted by created_at", () => {
+        return request(app)
+          .get("/api/articles")
+          .expect(200)
+          .then(({ body }) => {
+            expect(body.articles).to.be.sortedBy("created_at");
+          });
+      });
+      it("The response can be sorted by title", () => {
+        return request(app)
+          .get("/api/articles?order=desc")
+          .expect(200)
+          .then(({ body }) => {
+            console.log(body);
+            expect(body.articles).to.be.sortedBy("created_at", {
+              descending: true
+            });
           });
       });
     });

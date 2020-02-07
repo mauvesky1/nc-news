@@ -44,3 +44,13 @@ exports.incrementVote = (article_id, votes) => {
       return article;
     });
 };
+exports.fetchArticles = (sort_by, order_by) => {
+  console.log(order_by);
+  return knex
+    .select("articles.*")
+    .from("articles")
+    .leftJoin("comments", "articles.article_id", "comments.article_id")
+    .count({ comment_count: "articles.article_id" })
+    .groupBy("articles.article_id", "comments.article_id")
+    .orderBy(sort_by || "created_at", order_by || "asc");
+};

@@ -35,7 +35,6 @@ exports.fetchComments = article_id => {
     .from("comments")
     .where(article_id)
     .then(comments => {
-      // console.log(comments, "in the comments"); "article_id", "=", 1
       return comments;
     });
 };
