@@ -1,9 +1,11 @@
 exports.customErrorHandler = (err, req, res, next) => {
-  console.log(err);
+  //console.log(err, "in teh errors");
   if (err.status) {
     res.status(err.status).send({ msg: err.msg });
   } else if (err.code === "22P02") {
     res.status(400).send({ msg: "URL string incorrect" });
+  } else if (err.code === "42703") {
+    res.status(400).send({ msg: "Bad query" });
   } else {
     next(err);
   }

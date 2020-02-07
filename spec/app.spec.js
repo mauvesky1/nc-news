@@ -7,6 +7,8 @@ const request = require("supertest");
 const app = require("../app");
 const connection = require("../db/connection");
 
+const { checkExists } = require("../models/topics.models");
+
 chai.use(chaiSorted);
 
 after(() => {
@@ -188,20 +190,92 @@ describe("/api", () => {
           .get("/api/articles")
           .expect(200)
           .then(({ body }) => {
-            expect(body.articles).to.be.sortedBy("created_at");
+            expect(body.articles).to.be.sortedBy("created_at", {
+              ascending: true
+            });
           });
       });
-      it("The response can be sorted by title", () => {
+      it("The response can be put into an ascending order or a descending one", () => {
         return request(app)
           .get("/api/articles?order=desc")
           .expect(200)
           .then(({ body }) => {
-            console.log(body);
             expect(body.articles).to.be.sortedBy("created_at", {
               descending: true
             });
           });
       });
+      it("The response can be sorted", () => {
+        return request(app)
+          .get("/api/articles?sort_by=votes")
+          .expect(200)
+          .then(({ body }) => {
+            expect(body.articles).to.be.sortedBy("votes", { ascending: true });
+          });
+      });
+      it("Filters the articles by author", () => {
+        return request(app)
+          .get("/api/articles?author=butter_bridge&&sort_by=title")
+          .expect(200)
+          .then(({ body }) => {
+            expect(body.articles[0].author).to.equal("butter_bridge");
+            expect(body.articles[1].author).to.equal("butter_bridge");
+          });
+      });
+      it("Filters the articles by topic", () => {
+        return request(app)
+          .get("/api/articles?topic=cats")
+          .expect(200)
+          .then(({ body }) => {
+            expect(body.articles[0].topic).to.equal("cats");
+          });
+      });
+      it("Sends a 400 bad request if an attempt is made to search by a column that doesn't exist", () => {
+        return request(app)
+          .get("/api/articles?sort_by=mitchempire")
+          .expect(400)
+          .then(({ body }) => {
+            expect(body.msg).to.equal("Bad query");
+          });
+      });
+      it("Defaults to asc if order is not asc or desc", () => {
+        return request(app)
+          .get("/api/articles?order=themitchlegion")
+          .expect(200)
+          .then(({ body }) => {
+            expect(body.articles).to.be.sortedBy("created_at", {
+              ascending: true
+            });
+          });
+      });
+      it("Sends a 400 bad request if an attempt is made to filter by an author that is not in the database", () => {
+        return request(app)
+          .get("/api/articles?author=fightthemitch")
+          .expect(400)
+          .then(({ body }) => {
+            expect(body.msg).to.equal("Bad query");
+          });
+      });
+      it("Sends a 400 bad request if an attempt is made to filter by a topic that is not in the database", () => {
+        return request(app)
+          .get("/api/articles?topic=fightthemitch")
+          .expect(400)
+          .then(({ body }) => {
+            expect(body.msg).to.equal("Bad query");
+          });
+      });
     });
   });
 });
+// describe.only("checkExists", () => {
+//   beforeEach(() => {
+//     return connection.seed.run();
+//   });
+//   describe.only("CheckExists", () => {
+//     it("Returns true if a given author or topic exists, regardless of whether any articles are assoicated with them", () => {
+//       return request(checkExists("paper", "topic")).then(body => {
+//         console.log(body, "inside the then block");
+//       });
+//     });
+//   });
+// });

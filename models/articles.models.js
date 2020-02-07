@@ -44,13 +44,24 @@ exports.incrementVote = (article_id, votes) => {
       return article;
     });
 };
-exports.fetchArticles = (sort_by, order_by) => {
-  console.log(order_by);
+exports.fetchArticles = (sort_by, order_by, author, topic) => {
+  if (order_by !== "asc" && order_by !== "desc") {
+    order_by = "asc";
+  }
+
   return knex
     .select("articles.*")
     .from("articles")
     .leftJoin("comments", "articles.article_id", "comments.article_id")
     .count({ comment_count: "articles.article_id" })
     .groupBy("articles.article_id", "comments.article_id")
+    .modify(query => {
+      if (author) {
+        query.where("articles.author", author);
+      }
+      if (topic) {
+        query.where("articles.topic", topic);
+      }
+    })
     .orderBy(sort_by || "created_at", order_by || "asc");
 };

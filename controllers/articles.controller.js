@@ -35,11 +35,27 @@ exports.patchArticle = (req, res, next) => {
 };
 
 exports.getArticles = (req, res, next) => {
-  const { sort_by, order } = req.query;
-
-  fetchArticles(sort_by, order)
+  const { sort_by, order, author, topic } = req.query;
+  console.log(author);
+  const column = author || topic;
+  const table = "chair";
+  return Promise.all([fetchArticles(sort_by, order, author, topic)], false)
     .then(result => {
-      res.status(200).send({ articles: result });
+      if (result[1] === false) {
+        return Promise.reject({
+          status: 400,
+          msg: "There is no data associated with this input"
+        });
+      }
+      console.log(result[1], "this is in the promise block");
+      if (result[0].length === 0) {
+        return Promise.reject({ status: 400, msg: "Bad query" });
+      }
+
+      res.status(200).send({ articles: result[0] });
     })
-    .catch(next);
+    .catch(err => {
+      // console.log("in the catch", err);
+      next(err);
+    });
 };
