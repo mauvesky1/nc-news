@@ -5,11 +5,12 @@ exports.fetchTopics = () => {
   return knex.select("*").from("topics");
 };
 
-exports.checkExists = (column_name, table) => {
+exports.checkTopicExists = (column_name, table) => {
+  console.log(column_name, table, "in the function");
   return knex
     .select("*")
     .from(table)
-    .where(column_name)
+    .where("slug", column_name)
     .then(dataRows => {
       console.log("inside the function");
       if (dataRows.length === 0) {

@@ -11,17 +11,13 @@ exports.comment_count = article_id => {
 };
 
 exports.insertComment = comment => {
+  console.log(comment, "this is the comment");
   return (
     knex("comments")
       .select("*")
       .from("comments")
       // .where("article_id", "=", comment.article_id)
-      .insert({
-        body: "bee",
-        article_id: 1,
-        author: "rogersop",
-        article_id: 1
-      })
+      .insert(comment)
       .returning("*")
       .then(commentData => {
         return commentData;

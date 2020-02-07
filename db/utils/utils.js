@@ -75,17 +75,3 @@ exports.renameKey = comment => {
 
   return copy;
 };
-
-exports.checkExists = (column_name, table) => {
-  return knex
-    .select("*")
-    .from(table)
-    .where(column_name)
-    .then(dataRows => {
-      if (dataRows.length === 0) {
-        return false;
-      } else {
-        return true;
-      }
-    });
-};

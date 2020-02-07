@@ -125,7 +125,7 @@ describe("/api", () => {
       it("Posts a comment to the database and also returns that comment", () => {
         return request(app)
           .post("/api/articles/1/comments")
-          .send({ username: "username33", body: "MITCHTHEMAN" })
+          .send({ username: "rogersop", body: "MITCHTHEMAN" })
           .expect(201)
           .then(({ body }) => {
             expect(body.comment[0]).to.have.keys(
@@ -262,6 +262,31 @@ describe("/api", () => {
           .expect(400)
           .then(({ body }) => {
             expect(body.msg).to.equal("Bad query");
+          });
+      });
+      xit("Sends a different 400 bad request if an attempt is made to filter by a topic or author that does not have any articles", () => {
+        return request(app)
+          .get("/api/articles?topic=paper")
+          .expect(400)
+          .then(({ body }) => {
+            console.log(body);
+            expect(body.msg).to.equal(
+              "There is no data associated with this input"
+            );
+          });
+      });
+    });
+  });
+  describe("/api/comments/:comment_id", () => {
+    describe("PATCH", () => {
+      it("updates the vote property of a comment", () => {
+        return request(app)
+          .patch("/api/comments/1")
+          .send({ inc_votes: 111 })
+          .expect(202)
+          .then(({ body }) => {
+            console.log(body);
+            expect(body).to.equal(111);
           });
       });
     });

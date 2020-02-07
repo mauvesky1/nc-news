@@ -1,16 +1,19 @@
-const { insertComment, fetchComments } = require("../models/comments.models");
+const {
+  insertComment,
+  fetchComments,
+  patchComment
+} = require("../models/comments.models");
 const { renameKey } = require("../db/utils/utils");
 
 exports.postComment = (req, res, next) => {
   const { article_id } = req.params;
   const body = req.body;
-
-  body.created_by = body.username;
+  body.author = body.username;
   delete body.username;
-  //body.created_at = new Date.time();
-  body.article_id = article_id;
 
+  body.article_id = article_id;
   insertComment(body).then(commentData => {
+    console.log("in the controller");
     res.status(201).send({ comment: commentData });
   });
 };
@@ -28,4 +31,11 @@ exports.getComments = (req, res, next) => {
     .catch(err => {
       next(err);
     });
+};
+
+exports.patchComments = (req, res, next) => {
+  console.log(req);
+  console.log("controller");
+  patchComment();
+  //  patchComment(comment_id)
 };

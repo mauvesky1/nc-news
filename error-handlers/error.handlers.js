@@ -1,5 +1,5 @@
 exports.customErrorHandler = (err, req, res, next) => {
-  //console.log(err, "in teh errors");
+  console.log("in teh errors");
   if (err.status) {
     res.status(err.status).send({ msg: err.msg });
   } else if (err.code === "22P02") {
