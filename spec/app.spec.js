@@ -187,6 +187,7 @@ describe("/api", () => {
           .get("/api/articles")
           .expect(200)
           .then(({ body }) => {
+            //console.log(body);
             expect(body.articles[0]).to.have.keys(
               "title",
               "article_id",
@@ -254,7 +255,7 @@ describe("/api", () => {
       });
       it("Defaults to asc if order is not asc or desc", () => {
         return request(app)
-          .get("/api/articles?order=themitchlegion")
+          .get("/api/articles?order=notasc")
           .expect(200)
           .then(({ body }) => {
             expect(body.articles).to.be.sortedBy("created_at", {
@@ -264,7 +265,7 @@ describe("/api", () => {
       });
       it("Sends a 400 bad request if an attempt is made to filter by an author that is not in the database", () => {
         return request(app)
-          .get("/api/articles?author=fightthemitch")
+          .get("/api/articles?author=notonthelist")
           .expect(400)
           .then(({ body }) => {
             expect(body.msg).to.equal("Bad query");
@@ -272,19 +273,18 @@ describe("/api", () => {
       });
       it("Sends a 400 bad request if an attempt is made to filter by a topic that is not in the database", () => {
         return request(app)
-          .get("/api/articles?topic=fightthemitch")
+          .get("/api/articles?topic=notonthelist")
           .expect(400)
           .then(({ body }) => {
             expect(body.msg).to.equal("Bad query");
           });
       });
-      xit("Sends an empty response if an attempt is made to filter by an existing topic or author that does not have any articles", () => {
+      it("Sends an empty response if an attempt is made to filter by an existing topic or author that does not have any articles", () => {
         return request(app)
           .get("/api/articles?topic=paper")
           .expect(200)
           .then(({ body }) => {
-            body;
-            // expect(body.msg).to.equal()
+            expect(body.articles).to.eql([]);
           });
       });
     });
@@ -308,6 +308,8 @@ describe("/api", () => {
             );
           });
       });
+    });
+    describe("DELETE", () => {
       it("Deletes the comment", () => {
         return request(app)
           .delete("/api/comments/1")

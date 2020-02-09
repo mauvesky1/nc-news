@@ -34,18 +34,20 @@ exports.patchArticle = (req, res, next) => {
 exports.getArticles = (req, res, next) => {
   const { sort_by, order, author, topic } = req.query;
 
-  fetchArticles(sort_by, order, author, topic)
+  return Promise.all([fetchArticles(sort_by, order, author, topic), topic])
     .then(result => {
-      // if (boo === false) {
-      //   return Promise.reject({
-      //     status: 400,
-      //     msg: "There is no data associated with this input"
-      //   });
-      // }
-      if (result.length === 0) {
+      if (topic === undefined) {
+        result[1] = "mitch";
+      }
+
+      return Promise.all([checkTopicExists(result[1]), result[0]]);
+    })
+    .then(result => {
+      if (result[0] === true) {
+        res.status(200).send({ articles: result[1] });
+      } else {
         return Promise.reject({ status: 400, msg: "Bad query" });
       }
-      res.status(200).send({ articles: result });
     })
     .catch(err => {
       next(err);

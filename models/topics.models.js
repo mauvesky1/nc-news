@@ -4,16 +4,28 @@ exports.fetchTopics = () => {
   return knex.select("*").from("topics");
 };
 
-exports.checkTopicExists = (column_name, table) => {
+exports.checkTopicExists = topic => {
   return knex
     .select("*")
-    .from(table)
-    .where("slug", "=", "paper")
+    .from("topics")
+    .where("slug", "=", topic)
     .then(dataRows => {
       if (dataRows.length === 0) {
         return false;
-      } else {
-        return true;
       }
+      return true;
+    });
+};
+
+exports.checkAuthorExists = author => {
+  return knex
+    .select("*")
+    .from("articles")
+    .where("author", "=", author)
+    .then(dataRows => {
+      if (dataRows.length === 0) {
+        return false;
+      }
+      return true;
     });
 };
