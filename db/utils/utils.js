@@ -74,3 +74,7 @@ exports.renameKey = comment => {
 
   return copy;
 };
+
+exports.api_description = () => {
+  return JSON.stringify({ api: "your message here" });
+};

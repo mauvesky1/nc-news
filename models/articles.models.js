@@ -1,30 +1,33 @@
 const knex = require("../db/connection");
+const { checkTopicExists } = require("../models/topics.models");
 
 exports.fetchArticle = article_id => {
-  //   return knex
-  //     .select("articles.*")
-  //     .from("articles")
-  //     .count({ comment_count: "comments.article_id" })
-  //     .leftJoin("comments", "articles.article_id", "comments.article_id")
-  //     .groupBy("articles.article_id", "comments.aricle_id")
-  //     .where(article_id)
-  //     .then(article => {
-  //       if (article.length === 0) {
-  //         return Promise.reject({ status: 404, msg: "Not found" });
-  //       }
-  //     });
-  // };
   return knex
-    .select("*")
+    .select("articles.*")
+    .count({ comment_count: "articles.article_id" })
     .from("articles")
-    .where(article_id)
+    .leftJoin("comments", "articles.article_id", "comments.article_id")
+    .groupBy("articles.article_id")
+    .where("articles.article_id", "=", article_id.article_id)
     .then(article => {
+      //console.log(article, "in the models, articles");
       if (article.length === 0) {
         return Promise.reject({ status: 404, msg: "Not found" });
       }
       return article;
     });
 };
+//   return knex
+//     .select("*")
+//     .from("articles")
+//     .where(article_id)
+//     .then(article => {
+//       if (article.length === 0) {
+//         return Promise.reject({ status: 404, msg: "Not found" });
+//       }
+//       return article;
+//     });
+// };
 
 exports.incrementVote = (article_id, votes) => {
   return knex
@@ -62,5 +65,11 @@ exports.fetchArticles = (sort_by, order_by, author, topic) => {
         query.where("articles.topic", topic);
       }
     })
-    .orderBy(sort_by || "created_at", order_by || "asc");
+    .orderBy(sort_by || "created_at", order_by || "asc")
+    .then(result => {
+      // if (result.length === 0) {
+      //   return Promise.all([result, checkTopicExists("paper", "topics")]);
+      // }
+      return result;
+    });
 };

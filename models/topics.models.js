@@ -8,7 +8,7 @@ exports.checkTopicExists = (column_name, table) => {
   return knex
     .select("*")
     .from(table)
-    .where("slug", column_name)
+    .where("slug", "=", "paper")
     .then(dataRows => {
       if (dataRows.length === 0) {
         return false;

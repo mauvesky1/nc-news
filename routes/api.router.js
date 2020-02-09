@@ -4,6 +4,7 @@ const users_router = require("./users.router");
 const article_router = require("./article.router");
 const comments_router = require("./comments.router");
 const error_handler = require("../error-handlers/error.handlers");
+const api_description = require("../db/utils/utils");
 
 api_router.use("/topics", topics_router);
 api_router.use("/users", users_router);

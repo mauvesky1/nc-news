@@ -19,6 +19,14 @@ describe("/api", () => {
   beforeEach(() => {
     return connection.seed.run();
   });
+  describe("GET", () => {
+    xit("Responds with  JSON describing all the available endpoints", () => {
+      return request(app)
+        .get("/api/")
+        .expect(200)
+        .then(body => {});
+    });
+  });
   describe("/topics", () => {
     describe("GET", () => {
       it("GET 200: responds with 200 and all topics", () => {

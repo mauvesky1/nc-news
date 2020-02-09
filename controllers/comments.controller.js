@@ -44,12 +44,11 @@ exports.patchComments = (req, res, next) => {
       res.send({ comment: result });
     })
     .catch(next);
-  //  patchComment(comment_id)
 };
 
 exports.deleteComment = (req, res, next) => {
   const { comment_id } = req.params;
-  console.log(comment_id);
+
   deleteComment(comment_id)
     .then(result => {
       if (result === 1) {
