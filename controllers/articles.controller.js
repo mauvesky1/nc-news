@@ -4,7 +4,10 @@ const {
   incrementVote
 } = require("../models/articles.models");
 
-const { checkTopicExists } = require("../models/topics.models");
+const {
+  checkTopicExists,
+  checkAuthorExists
+} = require("../models/topics.models");
 
 exports.getArticle = (req, res, next) => {
   const article_id = req.params;
@@ -34,16 +37,27 @@ exports.patchArticle = (req, res, next) => {
 exports.getArticles = (req, res, next) => {
   const { sort_by, order, author, topic } = req.query;
 
-  return Promise.all([fetchArticles(sort_by, order, author, topic), topic])
+  return Promise.all([
+    fetchArticles(sort_by, order, author, topic),
+    topic,
+    author
+  ])
     .then(result => {
       if (topic === undefined) {
-        result[1] = "mitch";
+        result[1] = "paper";
+      }
+      if (author === undefined) {
+        result[2] = "lurker";
       }
 
-      return Promise.all([checkTopicExists(result[1]), result[0]]);
+      return Promise.all([
+        checkTopicExists(result[1]),
+        result[0],
+        checkAuthorExists(result[2])
+      ]);
     })
     .then(result => {
-      if (result[0] === true) {
+      if (result[0] === true && result[2] === true) {
         res.status(200).send({ articles: result[1] });
       } else {
         return Promise.reject({ status: 400, msg: "Bad query" });

@@ -20,8 +20,8 @@ exports.checkTopicExists = topic => {
 exports.checkAuthorExists = author => {
   return knex
     .select("*")
-    .from("articles")
-    .where("author", "=", author)
+    .from("users")
+    .where("username", "=", author)
     .then(dataRows => {
       if (dataRows.length === 0) {
         return false;

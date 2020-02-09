@@ -279,9 +279,17 @@ describe("/api", () => {
             expect(body.msg).to.equal("Bad query");
           });
       });
-      it("Sends an empty response if an attempt is made to filter by an existing topic or author that does not have any articles", () => {
+      it("Sends an empty response if an attempt is made to filter by an existing topic that does not have any articles", () => {
         return request(app)
           .get("/api/articles?topic=paper")
+          .expect(200)
+          .then(({ body }) => {
+            expect(body.articles).to.eql([]);
+          });
+      });
+      it("Sends an empty response if an attempt is made to filter by an existing author that does not have any articles", () => {
+        return request(app)
+          .get("/api/articles?author=lurker")
           .expect(200)
           .then(({ body }) => {
             expect(body.articles).to.eql([]);
